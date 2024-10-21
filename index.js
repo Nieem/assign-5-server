@@ -1,7 +1,7 @@
 const express=require("express");
 const cors=require("cors");
 require("dotenv").config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
 
 const app=express();
 const port=process.env.port || 5000;
@@ -28,13 +28,57 @@ async function run() {
     await client.connect();
 
     const userCollection=client.db("bootCampdbFull").collection("users");
-
+     // add user regi data
     app.post("/users",async(req,res)=>{
         const users=req.body;
         console.log(users);
         const result=await userCollection.insertOne(users);
         res.send(result);
     })
+    // get user list
+    app.get("/users",async(req,res)=>{
+        const query=userCollection.find();
+        console.log(query);
+        const result=await query.toArray();
+        res.send(result);
+    })
+    // get user by id
+    app.get("/users/:uid",async (req,res)=>{
+        const uid=req.params.uid;
+        const query={uid:uid}
+        const result= await userCollection.findOne(query);
+        res.send(result);
+    }
+
+    )
+
+    
+    // Update user by id
+    app.put("/users/:id", async (req, res) => {
+        const id = req.params.id;
+        const user = req.body;
+        const filter = { _id: new ObjectId(id) };
+        const option = { upsert: true };
+        console.log(user);
+        const updatedUser = {
+          $set: {
+            displayName: user.displayName,
+            email: user.email,
+            phone: user.phone,
+            photoUrl: user.photoUrl,
+            address: user.address,
+            isAdmin: user.isAdmin,
+            isBlocked: user.isBlocked,
+          },
+        };
+  
+        const result = await userCollection.updateOne(
+          filter,
+          updatedUser,
+          option
+        );
+        res.send(result);
+      });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
