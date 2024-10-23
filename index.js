@@ -37,11 +37,12 @@ async function run() {
         res.send(result);
     })
     // get user list
-    app.get("/users",async(req,res)=>{
-        const query=userCollection.find();
-        console.log(query);
-        const result=await query.toArray();
-        res.send(result);
+    app.get("/users",(req,res)=>{
+        // const query=userCollection.find();
+        // console.log(query);
+        // const result=await query.toArray();
+        // res.send(result);
+        res.send("yes users");
     })
     // get user by id
     app.get("/users/:uid",async (req,res)=>{
