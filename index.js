@@ -28,6 +28,7 @@ async function run() {
     await client.connect();
 
     const userCollection=client.db("bootCampdbFull").collection("users");
+    const userCollection1=client.db("bootCampdbFull").collection("categories");
      // add user regi data
     app.post("/users",async(req,res)=>{
         const users=req.body;
@@ -79,6 +80,14 @@ async function run() {
         );
         res.send(result);
       });
+
+  //fetch category
+  app.get("/category",async(req,res)=>{
+    const query=userCollection1.find();
+    console.log(query);
+    const result=await query.toArray();
+    res.send(result);
+})
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
