@@ -8,6 +8,8 @@ const port=process.env.port || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+
 console.log(process.env.DB_USER)
 // ${process.env.DB_USER}
 // ${process.env.DB_SECRET}
@@ -21,6 +23,8 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+ 
+
 
 async function run() {
   try {
@@ -37,12 +41,12 @@ async function run() {
         res.send(result);
     })
     // get user list
-    app.get("/users",(req,res)=>{
-        // const query=userCollection.find();
-        // console.log(query);
-        // const result=await query.toArray();
-        // res.send(result);
-        res.send("yes users");
+    app.get("/users",async(req,res)=>{
+      const query=userCollection.find();
+      console.log(query);
+      const result=await query.toArray();
+      res.send(result);
+     // res.send("yes users");
     })
     // get user by id
     app.get("/users/:uid",async (req,res)=>{
@@ -98,12 +102,19 @@ async function run() {
    // await client.close();
   }
 }
-run().catch(console.dir);
+
 app.get("/",(req,res)=>{
-    res.send("Bootcamp react node crud is running");
+  res.send("Bootcamp react node crud is running oo2o");
 }
 );
 
+app.get("/test",(req,res)=>{
+  res.send("test only 12");
+}
+);
 app.listen(port, ()=>{
-    console.log(`Bootcamp react node crud is running on ${port}`);
+  console.log(`Bootcamp react node crud is running on ${port}`);
 })
+
+
+run().catch(console.dir);
