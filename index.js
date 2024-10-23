@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 
-console.log(process.env.DB_USER)
+//console.log(process.env.DB_USER)
 // ${process.env.DB_USER}
 // ${process.env.DB_SECRET}
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_SECRET}@test1.rgboj.mongodb.net/?retryWrites=true&w=majority&appName=test1`;
@@ -33,6 +33,7 @@ async function run() {
 
     const userCollection=client.db("bootCampdbFull").collection("users");
     const userCollection1=client.db("bootCampdbFull").collection("categories");
+    const userCollection2=client.db("bootCampdbFull").collection("products");
      // add user regi data
     app.post("/users",async(req,res)=>{
         const users=req.body;
@@ -51,7 +52,8 @@ async function run() {
     // get user by id
     app.get("/users/:uid",async (req,res)=>{
         const uid=req.params.uid;
-        const query={uid:uid}
+        const query={uid:uid};
+        console.log(query);
         const result= await userCollection.findOne(query);
         res.send(result);
     }
@@ -94,6 +96,71 @@ async function run() {
     res.send(result);
 })
 
+
+//add products
+app.post("/products",async(req,res)=>{
+  const products=req.body;
+  console.log(products);
+  const result=await userCollection2.insertOne(products);
+  res.send(result);
+})
+
+ //fetch products
+
+ app.get("/products",async(req,res)=>{
+  const query=userCollection2.find();
+  console.log(query);
+  const result=await query.toArray();
+  res.send(result);
+ // res.send("yes users");
+})
+
+//fetch by id
+app.get("/products/:id",async(req,res)=>{
+  const id=req.params.id;
+  const query={_id:new ObjectId(id)};
+  const result= await userCollection2.findOne(query);
+  console.log(query);
+  res.send(result);
+ // res.send("yes users");
+})
+
+//update products
+app.put("/products/:id", async (req, res) => {
+  const id = req.params.id;
+  const product = req.body;
+  const filter = { _id: new ObjectId(id) };
+  const option = { upsert: true };
+  console.log(product);
+  const updatedProduct = {
+    $set: {
+      categoryId: product.categoryId,
+      category: product.category,
+      productName: product.productName,
+      resalePrice: product.resalePrice,
+      image: product.image,
+      description: product.description,
+      status: product.status,
+      postingTime: product.postingTime,
+    },
+  };
+
+  const result = await userCollection2.updateOne(
+    filter,
+    updatedProduct,
+    option
+  );
+  res.send(result);
+});
+// delete product
+app.delete("/products/:id",async(req,res)=>{
+  const id=req.params.id;
+  const query={_id:new ObjectId(id)};
+  const result= await userCollection2.deleteOne(query);
+  console.log(query);
+  res.send(result);
+ // res.send("yes users");
+})
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
