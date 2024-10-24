@@ -88,13 +88,54 @@ async function run() {
         res.send(result);
       });
 
+
+      //add category
+
+ app.post("/category",async(req,res)=>{
+  const categories=req.body;
+  const result=await userCollection1.insertOne(categories);
+  res.send(result);
+ })
+
   //fetch category
   app.get("/category",async(req,res)=>{
     const query=userCollection1.find();
     console.log(query);
     const result=await query.toArray();
     res.send(result);
-})
+   })
+
+   //fetch category by id
+  app.get("/category/:id",async(req,res)=>{
+    const id=req.params.id;
+    const query={_id:new ObjectId(id)};
+    const result= await userCollection1.findOne(query);
+    //console.log(id);
+    res.send(result);
+   })
+
+// update category by id
+   app.put("/category/:id", async (req, res) => {
+    const id = req.params.id;
+    const category = req.body;
+    const filter = { _id: new ObjectId(id) };
+    const option = { upsert: true };
+    console.log(category);
+    const updatedCategory = {
+      $set: {
+        name: category.name,
+        image: category.image
+       
+      },
+    };
+
+    const result = await userCollection1.updateOne(
+      filter,
+      updatedCategory,
+      option
+    );
+    res.send(result);
+  });
 
 
 //add products
