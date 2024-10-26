@@ -71,12 +71,13 @@ async function run() {
         const updatedUser = {
           $set: {
             displayName: user.displayName,
-            email: user.email,
+           // email: user.email,
             phone: user.phone,
             photoUrl: user.photoUrl,
             address: user.address,
             isAdmin: user.isAdmin,
-            isBlocked: user.isBlocked,
+           isBlocked: user.isBlocked,
+           
           },
         };
   
@@ -137,7 +138,15 @@ async function run() {
     res.send(result);
   });
 
-
+// delete category
+app.delete("/category/:id",async(req,res)=>{
+  const id=req.params.id;
+  const query={_id:new ObjectId(id)};
+  const result= await userCollection1.deleteOne(query);
+  console.log(query);
+  res.send(result);
+ // res.send("yes users");
+})
 //add products
 app.post("/products",async(req,res)=>{
   const products=req.body;
