@@ -9,10 +9,10 @@ const port=process.env.port || 5000;
 app.use(cors());
 app.use(express.json());
 
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}));
+// app.use(cors({
+//   origin: 'http://localhost:5173',
+//   credentials: true
+// }));
 
 //console.log(process.env.DB_USER)
 // ${process.env.DB_USER}
@@ -174,7 +174,8 @@ app.post("/products",async(req,res)=>{
 app.get("/products/:id",async(req,res)=>{
   const id=req.params.id;
   const query={_id:new ObjectId(id)};
-  const result= await userCollection2.findOne(query).toArray();
+  const result=  await userCollection2.findOne(query);
+ // const finaldata= await result.toArray();
   console.log(query);
   res.send(result);
  // res.send("yes users");
