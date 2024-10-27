@@ -34,6 +34,7 @@ async function run() {
     const userCollection=client.db("bootCampdbFull").collection("users");
     const userCollection1=client.db("bootCampdbFull").collection("categories");
     const userCollection2=client.db("bootCampdbFull").collection("products");
+    const userCollection3=client.db("bootCampdbFull").collection("userBuyproducts");
      // add user regi data
     app.post("/users",async(req,res)=>{
         const users=req.body;
@@ -169,9 +170,20 @@ app.post("/products",async(req,res)=>{
 app.get("/products/:id",async(req,res)=>{
   const id=req.params.id;
   const query={_id:new ObjectId(id)};
-  const result= await userCollection2.findOne(query);
+  const result= await userCollection2.findOne(query).toArray();
   console.log(query);
   res.send(result);
+ // res.send("yes users");
+})
+
+//fetch by category
+app.get("/productsBycategory/:id",async(req,res)=>{
+  const id=req.params.id;
+  const query={categoryId:id};
+  const result=  userCollection2.find(query);
+  const datafinal= await result.toArray();
+  console.log(result);
+  res.send(datafinal);
  // res.send("yes users");
 })
 
@@ -211,6 +223,24 @@ app.delete("/products/:id",async(req,res)=>{
   res.send(result);
  // res.send("yes users");
 })
+
+// add user buy history 
+app.post("/userBuyproducts",async(req,res)=>{
+  const buyProducts=req.body;
+  console.log(buyProducts);
+  const result=await userCollection3.insertOne(buyProducts);
+  res.send(result);
+})
+// get user buy history 
+app.get("/userBuyproducts/:uid",async(req,res)=>{
+  const id=req.params.uid;
+  const query={uid:id};
+  const result=  userCollection3.find(query);
+  const datafinal= await result.toArray();
+  res.send(datafinal);
+})
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
