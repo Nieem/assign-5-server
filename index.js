@@ -236,6 +236,7 @@ app.post("/userBuyproducts",async(req,res)=>{
   const result=await userCollection3.insertOne(buyProducts);
   res.send(result);
 })
+
 // get user buy history 
 app.get("/userBuyproducts/:uid",async(req,res)=>{
   const id=req.params.uid;
