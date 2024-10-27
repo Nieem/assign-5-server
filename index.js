@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(cors({
-  origin: 'https://assign-5-server.onrender.com',
+  origin: 'http://localhost:5173',
   credentials: true
 }));
 
