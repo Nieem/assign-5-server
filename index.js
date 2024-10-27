@@ -9,6 +9,10 @@ const port=process.env.port || 5000;
 app.use(cors());
 app.use(express.json());
 
+app.use(cors({
+  origin: 'https://assign-5-server.onrender.com',
+  credentials: true
+}));
 
 //console.log(process.env.DB_USER)
 // ${process.env.DB_USER}
